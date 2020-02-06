@@ -31,7 +31,7 @@ Start:
 					;que não usarei portas analógicas
 
 Main:
-	goto	RotinadeIncializacao
+	call	RotinadeIncializacao
 	
 RotinadeIncializacao:
 	bcf		STATUS, RP0	;RP0 --> 0
@@ -41,18 +41,54 @@ RotinadeIncializacao:
 	; Som vem aqui parceiro
 	call	Delay_1s	;Chama uma função de delay de 1 segundo 
 	clrf	PORTA	;Limpo a porta A setando tudo para 0
+	clrf led_cnt	;led_cnt = 0
+
+LedCountLoop:
+	movlw	.0
+	subwf	led_cnt,W
+	btfsc	STATUS, Z
+	bsf		PORTA, RA0
+	
+	clrf	PORTA		;limpa pinos RA0-RA3
+	movlw	.1
+	subwf	led_cnt,W	;(Subtrai) 0 é W e 1 é o registrador que está 
+						;sendo utilizado no momento
+	btfsc	STATUS,Z	;Se Z(resto da subtração) vale 1, pula a linha e executa a linha 
+						;de baixo
+	bsf		PORTA, RA1	; led_cnt == 0;
+	
+	movlw	.2
+	subwf	led_cnt,W
+	btfsc	STATUS, Z
+	bsf		PORTA, RA2
 	
 	
+	movlw	.3
+	subwf	led_cnt,W
+	btfsc	STATUS, Z
+	bsf		PORTA, RA3
+	
+	call	Delay_200ms
+	incf	led_cnt, F	; Incrementa led_cont
+	
+	movlw	.4
+	subwf	led_cnt, W	
+	btfss	STATUS, Z	; led_cnt ==4? Se o resto for 0, Z é 1
+	goto	LedCountLoop	;NÃO
+	clrf	PORTA		;
+	return				; Como usei Call devo retornar para ;
+						;principal
+	 
 	
 	
 Delay_1s:
+Delay_200ms
 
-
 	
 	
 	
 	
 	
 
-
+;Se eu fizer um call, preciso colocar um return
 
