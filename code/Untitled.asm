@@ -1,4 +1,4 @@
-#include <pic16f887.inc>
+#include <p16f887.inc>
 
 list p=16f887
 
@@ -26,12 +26,13 @@ Start:
 						;0 Entrada 
 	movwf	TRISA	; Movo o B'11110000' para o registrador TRISA 
 	
-	bcf		STATUS, RP1	;Vou para o banco 3 
+	bsf		STATUS, RP1	;Vou para o banco 3 
 	clrf	ANSEL	; Configurando os pinos como digitais, uma vez
 					;que não usarei portas analógicas
 
 Main:
 	call	RotinadeIncializacao
+	goto	Main
 	
 RotinadeIncializacao:
 	bcf		STATUS, RP0	;RP0 --> 0
@@ -41,7 +42,7 @@ RotinadeIncializacao:
 	; Som vem aqui parceiro
 	call	Delay_1s	;Chama uma função de delay de 1 segundo 
 	clrf	PORTA	;Limpo a porta A setando tudo para 0
-	clrf led_cnt	;led_cnt = 0
+	clrf	led_cnt	;led_cnt = 0
 
 LedCountLoop:
 	movlw	.0
@@ -79,10 +80,18 @@ LedCountLoop:
 	return				; Como usei Call devo retornar para ;
 						;principal
 	 
+	 
 	
 	
 Delay_1s:
-Delay_200ms
+	nop 
+	return 
+	
+Delay_200ms:
+	nop
+	return
+	
+	end
 
 	
 	
